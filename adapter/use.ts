@@ -1,15 +1,23 @@
-import { EuroPayment, AmericanBank, CurrencyAdapter } from './adapter.ts';
+import { FrenchRestaurantSystem, AmericanRestaurant, AmericanToFrenchAdapter } from './adapter.ts';
 
-console.log("🇺🇸 Banque américaine (USD) avec adaptateur (EUR) :\n");
+console.log("Commande dans un restaurant américain avec système français :\n");
 
-// Banque américaine a besoin d'un adaptateur pour fonctionner en EUR
-const americanBank = new AmericanBank();
-const currencyAdapter: EuroPayment = new CurrencyAdapter(americanBank);
+const americanRestaurant = new AmericanRestaurant();
+const frenchSystemAdapter: FrenchRestaurantSystem = new AmericanToFrenchAdapter(americanRestaurant);
 
-console.log("Test de plusieurs paiements :");
-const amounts = [50, 100, 250];
+console.log("Ajout de plats à la commande :");
 
-amounts.forEach((amount, index) => {
-    console.log(`\n${index + 1}. Paiement de ${amount}€ :`);
-    currencyAdapter.payInEuros(amount);
+const order = [
+    { name: "Burger Deluxe", price: 15.50 },
+    { name: "Frites Maison", price: 6.00 },
+    { name: "Coca-Cola", price: 3.50 },
+    { name: "Cheesecake", price: 8.00 }
+];
+
+order.forEach(item => {
+    frenchSystemAdapter.addDish(item.name, item.price);
 });
+
+console.log(`\nTotal de la commande : ${frenchSystemAdapter.getTotalBill()}€`);
+
+frenchSystemAdapter.printBill();
